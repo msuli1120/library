@@ -69,6 +69,52 @@
       return $book_array;
     }
 
+    function saveCopy($copy){
+      $executed = $GLOBALS['db']->prepare("INSERT INTO copies (book_id, copy) VALUES ({$this->getId()}, :copy);");
+      $executed->bindParam(':copy', $copy, PDO::PARAM_INT);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function saveAvailableCopy($copy){
+      $executed = $GLOBALS['db']->prepare("INSERT INTO available_copies (book_id, available_copy) VALUES ({$this->getId()}, :copy);");
+      $executed->bindParam(':copy', $copy, PDO::PARAM_INT);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+    static function getCopy($book_id){
+      $executed = $GLOBALS['db']->prepare("SELECT copies.* FROM copies JOIN books ON (copies.book_id = books.id) WHERE books.id = :id;");
+      $executed->bindParam(':id', $book_id, PDO::PARAM_INT);
+      $executed->execute();
+      $result = $executed->fetch(PDO::FETCH_ASSOC);
+      return $result['copy'];
+    }
+
+    static function getAvailableCopy($book_id){
+      $executed = $GLOBALS['db']->prepare("SELECT available_copy FROM available_copies JOIN books ON (available_copies.book_id = books.id) WHERE books.id = :id;");
+      $executed->bindParam(':id', $book_id, PDO::PARAM_INT);
+      $executed->execute();
+      $result = $executed->fetch(PDO::FETCH_ASSOC);
+      return $result['available_copy'];
+    }
+
+    static function setAvailableCopy($book_id){
+      $executed = $GLOBALS['db']->prepare("UPDATE available_copies SET available_copy = available_copy - 1 WHERE book_id = :id;");
+      $executed->bindParam(':id', $book_id, PDO::PARAM_INT);
+      $executed->execute();
+      $result = $executed->fetch(PDO::FETCH_ASSOC);
+      return $result['available_copy'];
+    }
 
   }
 ?>

@@ -1,0 +1,12 @@
+{% include 'userheader.html.twig' %}
+
+ <h4>Hello <strong>{{ user.getUser }}</strong></h4>
+
+ <p>Here are all books listed below</p>
+
+ {% for book in books %}
+  <li><a href="/checkout/{{ user.getId }}/{{ book.getId }}">{{ book.getBook }}</a></li>
+ {% endfor %}
+
+
+{% include 'footer.html.twig' %}

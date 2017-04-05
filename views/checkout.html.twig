@@ -1,0 +1,18 @@
+{% include 'userheader.html.twig' %}
+
+  <h4>Hello <strong>{{ user.getUser }}</strong></h4>
+
+  <p>Book Name: {{ book.getBook }}</p>
+  <p>Available Copy: {{ available_copy }}</p>
+
+  <form action="/checkout" method="post">
+    <input type="hidden" name="user_id" value="{{ user.getId }}">
+    <input type="hidden" name="book_id" value="{{ book.getId }}">
+    {% if available_copy > 0 %}
+      <button type="submit">Checkout {{ book.getBook }}</button>
+    {% endif %}
+  </form>
+
+  <a href="/">Home</a>
+
+{% include 'footer.html.twig' %}

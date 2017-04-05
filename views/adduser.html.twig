@@ -1,0 +1,12 @@
+{% include 'userheader.html.twig' %}
+
+  <h4>Create User</h4>
+
+  <form action="/adduser" method="post">
+    <label for="user">Enter Name:</label>
+    <input type="text" name="user">
+    <button type="submit">Create</button>
+  </form>
+
+
+{% include 'footer.html.twig' %}

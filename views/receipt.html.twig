@@ -1,0 +1,11 @@
+{% include 'userheader.html.twig' %}
+
+  <h4>{{ user.getUser }}'s Receipt</h4>
+
+  <p>Book: {{ book }}</p>
+  <p>Time of Checkout: {{ result.checkout_date }}</p>
+  <p>Due: {{ result.due_date }}</p>
+
+  <a href="/">Home</a>
+
+{% include 'footer.html.twig' %}
