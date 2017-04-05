@@ -3,7 +3,7 @@
   <h4><a href="/addbook">Click here</a> to add a book</h4>
   <h4><a href="/adduser">Click here</a> to create a user</h4>
 
-
-
-
+  {% if msg is not empty %}
+    <h5>{{ msg }}</h5>
+  {% endif %}
 {% include 'footer.html.twig' %}

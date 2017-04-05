@@ -59,6 +59,16 @@
       return $new_book;
     }
 
+    static function getAllBooks(){
+      $book_array = array();
+      $executed = $GLOBALS['db']->query("SELECT * FROM books;");
+      $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+      foreach($results as $result){
+        array_push($book_array, $result['book']);
+      }
+      return $book_array;
+    }
+
 
   }
 ?>

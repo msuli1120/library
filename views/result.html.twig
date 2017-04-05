@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <title>Library</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">The Library</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li><a href="/addbook">Add Book</a></li>
+          <li><a href="#">Add User</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Welcome to The Library</h1>
+      </div>
+
+        {% if book is not empty %}
+          <h5>Here is the match:</h5>
+          <p><a href="/book/{{ book.getId }}">{{ book.getBook }}</a></p>
+        {% endif %}
+
+        {% if author is not empty %}
+          <h5>Here is the match:</h5>
+          <p><a href="/author/{{ author.getId }}">{{ author.getAuthor }}</a></p>
+        {% endif %}
+
+      <a href="/">Home</a>
+    </div>
+  </body>
+</html>

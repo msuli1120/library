@@ -24,7 +24,8 @@
   Request::enableHttpMethodParameterOverride();
 
   $app->get("/", function () use ($app) {
-    return $app['twig']->render('index.html.twig');
+    $msg = '';
+    return $app['twig']->render('index.html.twig', array('msg'=>$msg));
   });
 
   $app->get("/addbook", function () use ($app) {
@@ -66,7 +67,21 @@
   });
 
   $app->post("/search", function () use ($app) {
-    
+    $book_array = Book::getAllBooks();
+    $author_array = Author::getAllNames();
+    if(in_array($_POST['srch-term'], $book_array)){
+      $author = '';
+      $new_book = Book::findByBook($_POST['srch-term']);
+      return $app['twig']->render('result.html.twig', array('book'=>$new_book, 'author'=>$author));
+    } else if(in_array($_POST['srch-term'], $author_array)){
+      $book = '';
+      $new_author = Author::getByName($_POST['srch-term']);
+      return $app['twig']->render('result.html.twig', array('author'=>$new_author, 'book'=>$book));
+    } else {
+      $msg = "No Match!";
+      return $app['twig']->render('index.html.twig', array('msg'=>$msg));
+    }
+
   });
 
   return $app;
