@@ -1,0 +1,17 @@
+{% include 'header.html.twig' %}
+
+  <h2>Add a book</h2>
+
+  <form action="/addbook" method="post">
+    <label for="book">Enter the name of the book</label>
+    <input type="text" name="book">
+    <button type="submit">Add</button>
+  </form>
+
+  {% for book in books %}
+    <li><a href="/book/{{ book.getId }}">{{ book.getBook }}</a></li>
+  {% endfor %}
+
+  <a href="/">Home</a>
+
+{% include 'footer.html.twig' %}

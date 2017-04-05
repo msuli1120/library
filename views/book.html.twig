@@ -1,0 +1,24 @@
+{% include 'header.html.twig' %}
+
+  <h4>Add An Author For {{ book.getBook }}</h4>
+
+  <form action="/addauthor" method="post">
+    <input type="hidden" name="book_id" value="{{ book.getId }}">
+    <label for="author">Enter author's name:</label>
+    <input type="text" name="author">
+    <button type="submit">Add</button>
+  </form>
+
+  <p>Book: <strong>{{ book.getBook }}</strong></p>
+  <p>Author(s):</p>
+    <ol>
+      {% for author in authors %}
+        <li><a href="/author/{{ author.getId }}">{{ author.getAuthor }}</a></li>
+      {% endfor %}
+    </ol>
+
+  <a href="/addbook">Go back</a>
+  <br>
+  <a href="/">Home</a>
+
+{% include 'footer.html.twig' %}

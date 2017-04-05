@@ -1,0 +1,11 @@
+{% include 'header.html.twig' %}
+
+  <h4>Author: {{ author.getAuthor }}</h4>
+
+  <p>Books:</p>
+  {% for book in books %}
+    <li><a href="/book/{{ book.id }}">{{ book.book }}</a></li>
+  {% endfor %}
+
+  <a href="/">Home</a>
+{% include 'footer.html.twig' %}
