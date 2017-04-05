@@ -50,7 +50,14 @@
       return $new_book;
     }
 
-
+    static function findByBook($book){
+      $executed = $GLOBALS['db']->prepare("SELECT * FROM bookS WHERE book = :book;");
+      $executed->bindParam(':book', $book, PDO::PARAM_STR);
+      $executed->execute();
+      $result = $executed->fetch(PDO::FETCH_ASSOC);
+      $new_book = new Book($result['book'], $result['id']);
+      return $new_book;
+    }
 
 
   }

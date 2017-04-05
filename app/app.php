@@ -65,5 +65,9 @@
     return $app['twig']->render('author.html.twig', array('author'=>Author::find($id), 'books'=>$books));
   });
 
+  $app->post("/search", function () use ($app) {
+    
+  });
+
   return $app;
 ?>
