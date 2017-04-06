@@ -151,22 +151,20 @@
  });
 
  $app->post("/editbook", function () use ($app) {
-   if((!empty($_POST['book']))&&(!is_null($_POST['copy']))){
+   if((empty($_POST['book']))||(empty($_POST['copy']))){
+     return $app['twig']->render('bookedit.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']), 'availablecopy'=>Book::getAvailableCopy($_POST['book_id'])));
+   } else {
      $book = Book::find($_POST['book_id']);
      $old_copy = Book::getCopy($_POST['book_id']);
      $old_available_copy = Book::getAvailableCopy($_POST['book_id']);
      if($_POST['copy'] != 0){
        $available_copy = $old_available_copy + ($_POST['copy']-$old_copy);
        $book->availableCopyUpdate($available_copy);
-     } else {
-       $book->availableCopyUpdate(0);
      }
      $book->bookUpdate($_POST['book']);
      $book->copyUpdate($_POST['copy']);
      return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']),
      'overdueloaners'=>Book::checkOverdue($_POST['book_id']), 'loaners'=>Book::findLoaner($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
-   } else {
-     return $app['twig']->render('bookedit.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id'])));
    }
  });
 
