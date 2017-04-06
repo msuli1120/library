@@ -132,5 +132,38 @@
       return $results;
     }
 
+    function bookUpdate($book){
+      $executed = $GLOBALS['db']->prepare("UPDATE books SET book = :book WHERE id = {$this->getId()};");
+      $executed->bindParam(':book', $book, PDO::PARAM_STR);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function copyUpdate($copy){
+      $executed = $GLOBALS['db']->prepare("UPDATE copies SET copy = :copy WHERE book_id = {$this->getId()};");
+      $executed->bindParam(':copy', $copy, PDO::PARAM_INT);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function availableCopyUpdate($copy){
+      $executed = $GLOBALS['db']->prepare("UPDATE available_copies SET available_copy = :copy WHERE book_id = {$this->getId()};");
+      $executed->bindParam(':copy', $copy, PDO::PARAM_INT);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   }
 ?>

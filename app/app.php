@@ -93,7 +93,7 @@
   });
 
   $app->get("/adduser", function () use ($app) {
-    return $app['twig']->render('adduser.html.twig');
+    return $app['twig']->render('adduser.html.twig', array('user'=>''));
   });
 
  $app->post("/adduser", function () use ($app) {
@@ -102,7 +102,7 @@
      $new_user->save();
      return $app['twig']->render('user.html.twig', array('user'=>$new_user, 'books'=>Book::getAll()));
    } else {
-     return $app['twig']->render('adduser.html.twig');
+     return $app['twig']->render('adduser.html.twig', array('user'=>''));
    }
  });
 
@@ -122,6 +122,50 @@
    $new_book = Book::find($book_id);
    $new_book->setAvailableCopy($book_id);
    return $app['twig']->render('receipt.html.twig', array('result'=>$result, 'user'=>User::find($user_id), 'book'=>$new_book->getBook()));
+ });
+
+ $app->post("/usersearch", function () use ($app) {
+   $user_names = User::userArray();
+   if(!empty($_POST['srch-term'])){
+     if(in_array($_POST['srch-term'], $user_names)){
+       $msg= '';
+       $new_user = User::SearchByUser($_POST['srch-term']);
+       return $app['twig']->render('adduser.html.twig', array('user'=>$new_user));
+     }
+   } else {
+     $user = '';
+     return $app['twig']->render('adduser.html.twig', array('user'=>$user));
+   }
+ });
+
+ $app->get("/user/{id}", function ($id) use ($app) {
+   $user = User::find($id);
+   $results = $user->userInfo();
+   return $app['twig']->render('userinfo.html.twig', array('user'=>$user, 'results'=>$results));
+ });
+
+ $app->get("/book/{id}/edit", function ($id) use ($app) {
+   return $app['twig']->render('bookedit.html.twig', array('book'=>Book::find($id), 'copy'=>Book::getCopy($id), 'availablecopy'=>Book::getAvailableCopy($id)));
+ });
+
+ $app->post("/editbook", function () use ($app) {
+   if((!empty($_POST['book']))&&(!is_null($_POST['copy']))){
+     $book = Book::find($_POST['book_id']);
+     $old_copy = Book::getCopy($_POST['book_id']);
+     $old_available_copy = Book::getAvailableCopy($_POST['book_id']);
+     if($_POST['copy'] != 0){
+       $available_copy = $old_available_copy + ($_POST['copy']-$old_copy);
+       $book->availableCopyUpdate($available_copy);
+     } else {
+       $book->availableCopyUpdate(0);
+     }
+     $book->bookUpdate($_POST['book']);
+     $book->copyUpdate($_POST['copy']);
+     return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']),
+     'overdueloaners'=>Book::checkOverdue($_POST['book_id']), 'loaners'=>Book::findLoaner($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
+   } else {
+     return $app['twig']->render('bookedit.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id'])));
+   }
  });
 
   return $app;

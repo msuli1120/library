@@ -1,0 +1,18 @@
+{% include 'userheader.html.twig' %}
+
+  <h4>{{ user.getUser }}</h4>
+  <p>User Id: {{ user.getId }}</p>
+  {% if results is not empty %}
+    {% for result in results %}
+      <p><a href="/book/{{ result.id }}"> {{ result.book }}</a></p>
+        <li>Checkout Time: {{ result.checkout_date }}</li>
+        <li>Due: {{ result.due_date }}</li>
+        <br>
+    {% endfor %}
+    {% else %}
+      <p>Empty</p>
+  {% endif %}
+
+  <a href="/">Home</a>
+
+{% include 'footer.html.twig' %}

@@ -1,0 +1,16 @@
+{% include 'header.html.twig' %}
+
+  <h4>Edit {{ book.getBook }}</h4>
+
+  <form action="/editbook" method="post">
+    <input type="hidden" name="book_id" value="{{ book.getId }}">
+    <input type="hidden" name="available_copy" value="{{ availablecopy }}">
+    <label for="book">Book Name:</label>
+    <input type="text" name="book" placeholder="{{ book.getBook }}">
+    <label for="copy">Copies:</label>
+    <input type="num" name="copy" placeholder="{{ copy }}">
+    <button type="submit">Update</button>
+  </form>
+
+
+{% include 'footer.html.twig' %}
