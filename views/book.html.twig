@@ -9,15 +9,51 @@
     <button type="submit">Add</button>
   </form>
 
-  <p>Book: <strong>{{ book.getBook }}</strong></p>
-  <p>Copies: {{ copy }}</p>
-  <p>Available Copies: {{ available_copy }}</p>
-  <p>Author(s):</p>
-    <ol>
-      {% for author in authors %}
-        <li><a href="/author/{{ author.getId }}">{{ author.getAuthor }}</a></li>
-      {% endfor %}
-    </ol>
+  <div class="row">
+    <div class="col-md-6">
+      <p>Book: <strong>{{ book.getBook }}</strong></p>
+      <p>Copies: {{ copy }}</p>
+      <p>Available Copies: {{ available_copy }}</p>
+      <p>Author(s):</p>
+        <ol>
+          {% for author in authors %}
+            <li><a href="/author/{{ author.getId }}">{{ author.getAuthor }}</a></li>
+          {% endfor %}
+        </ol>
+    </div>
+
+    {% if loaners is not empty %}
+      <div class="col-md-3">
+        <p>Loaners:</p>
+        <ol>
+          <li>
+            {% for loaner in loaners %}
+              <p>User ID: {{ loaner.id }}</p>
+              <p>User Name: {{ loaner.user }}</p>
+              <br>
+            {% endfor %}
+          </li>
+        </ol>
+      </div>
+    {% endif %}
+
+    {% if overdueloaners is not empty %}
+      <div class="col-md-3">
+        <p>Overdue:</p>
+        <ol>
+          <li>
+            {% for overdueloaner in overdueloaners %}
+              <p>User ID: {{ overdueloaner.id }}</p>
+              <p>User Name: {{ overdueloaner.user }}</p>
+              <p>Due: {{ overdueloaner.due_date }}</p>
+              <br>
+            {% endfor %}
+          </li>
+        </ol>
+      </div>
+    {% endif %}
+  </div>
+
 
   <a href="/addbook">Go back</a>
   <br>

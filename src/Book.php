@@ -116,5 +116,21 @@
       return $result['available_copy'];
     }
 
+    static function findLoaner($book_id){
+      $executed = $GLOBALS['db']->prepare("SELECT users.*, checkouts.checkout_date, checkouts.due_date FROM users JOIN checkouts ON (checkouts.user_id = users.id) JOIN books ON (checkouts.book_id = books.id) WHERE books.id = :id;");
+      $executed->bindParam(':id', $book_id, PDO::PARAM_INT);
+      $executed->execute();
+      $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+    }
+
+    static function checkOverdue($book_id){
+      $executed = $GLOBALS['db']->prepare("SELECT users.*, checkouts.checkout_date, checkouts.due_date FROM users JOIN checkouts ON (checkouts.user_id = users.id) JOIN books ON (checkouts.book_id = books.id) WHERE books.id = :id AND checkouts.due_date < NOW();");
+      $executed->bindParam(':id', $book_id, PDO::PARAM_INT);
+      $executed->execute();
+      $results = $executed->fetchAll(PDO::FETCH_ASSOC);
+      return $results;
+    }
+
   }
 ?>

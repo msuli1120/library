@@ -12,7 +12,7 @@
 
   $app['debug'] = true;
 
-  $server = 'mysql:host=localhost:8889;dbname=library';
+  $server = 'mysql:host=localhost;dbname=library';
   $user = 'root';
   $pass = 'root';
   $db = new PDO($server, $user, $pass);
@@ -46,7 +46,8 @@
   });
 
   $app->get("/book/{id}", function ($id) use ($app) {
-    return $app['twig']->render('book.html.twig', array('book'=>Book::find($id), 'copy'=>Book::getCopy($id), 'available_copy'=>Book::getAvailableCopy($id), 'authors'=>Author::getAuthors($id)));
+    var_dump(Book::findLoaner($id));
+    return $app['twig']->render('book.html.twig', array('book'=>Book::find($id), 'copy'=>Book::getCopy($id), 'available_copy'=>Book::getAvailableCopy($id), 'authors'=>Author::getAuthors($id), 'loaners'=>Book::findLoaner($id), 'overdueloaners'=>Book::checkOverdue($id)));
   });
 
   $app->post("/addauthor", function () use ($app) {
@@ -57,12 +58,14 @@
       if(in_array($_POST['author'], $authors)){
         $new_author = Author::getByName($_POST['author']);
         $new_author->saveBook($_POST['book_id']);
-        return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
+        return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']),
+        'overdueloaners'=>Book::checkOverdue($_POST['book_id']), 'loaners'=>Book::findLoaner($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
       } else {
         $new_author = new Author($_POST['author']);
         $new_author->save();
         $new_author->saveBook($_POST['book_id']);
-        return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
+        return $app['twig']->render('book.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id']), 'loaners'=>Book::findLoaner($_POST['book_id']),
+        'overdueloaners'=>Book::checkOverdue($_POST['book_id']), 'available_copy'=>Book::getAvailableCopy($_POST['book_id']), 'authors'=>Author::getAuthors($_POST['book_id'])));
       }
     }
   });
@@ -117,7 +120,6 @@
    $executed->bindParam(':book_id', $book_id, PDO::PARAM_INT);
    $executed->execute();
    $result = $executed->fetch(PDO::FETCH_ASSOC);
-   var_dump($result);
    $new_book = Book::find($book_id);
    $new_book->setAvailableCopy($book_id);
    return $app['twig']->render('receipt.html.twig', array('result'=>$result, 'user'=>User::find($user_id), 'book'=>$new_book->getBook()));
