@@ -46,7 +46,6 @@
   });
 
   $app->get("/book/{id}", function ($id) use ($app) {
-    var_dump(Book::findLoaner($id));
     return $app['twig']->render('book.html.twig', array('book'=>Book::find($id), 'copy'=>Book::getCopy($id), 'available_copy'=>Book::getAvailableCopy($id), 'authors'=>Author::getAuthors($id), 'loaners'=>Book::findLoaner($id), 'overdueloaners'=>Book::checkOverdue($id)));
   });
 
