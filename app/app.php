@@ -128,9 +128,11 @@
    $user_names = User::userArray();
    if(!empty($_POST['srch-term'])){
      if(in_array($_POST['srch-term'], $user_names)){
-       $msg= '';
        $new_user = User::SearchByUser($_POST['srch-term']);
        return $app['twig']->render('adduser.html.twig', array('user'=>$new_user));
+     } else {
+       $user = '';
+       return $app['twig']->render('adduser.html.twig', array('user'=>$user));
      }
    } else {
      $user = '';
@@ -166,6 +168,15 @@
    } else {
      return $app['twig']->render('bookedit.html.twig', array('book'=>Book::find($_POST['book_id']), 'copy'=>Book::getCopy($_POST['book_id'])));
    }
+ });
+
+ $app->post("/return", function () use  ($app) {
+   $book = Book::find($_POST['book_id']);
+   $book->bookReturn($_POST['user_id']);
+   $book->availableCopyReturn();
+   $user = User::find($_POST['user_id']);
+   $results = $user->userInfo();
+   return $app['twig']->render('userinfo.html.twig', array('user'=>$user, 'results'=>$results));
  });
 
   return $app;

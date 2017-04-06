@@ -165,5 +165,25 @@
       }
     }
 
+    function bookReturn($user_id){
+      $executed = $GLOBALS['db']->prepare("DELETE FROM checkouts WHERE user_id = :id AND book_id = {$this->getId()};");
+      $executed->bindParam(':id', $user_id, PDO::PARAM_INT);
+      $executed->execute();
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function availableCopyReturn(){
+      $executed = $GLOBALS['db']->exec("UPDATE available_copies SET available_copy = available_copy + 1 WHERE book_id = {$this->getId()};");
+      if($executed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   }
 ?>

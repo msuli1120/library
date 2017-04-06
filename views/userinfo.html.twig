@@ -4,9 +4,14 @@
   <p>User Id: {{ user.getId }}</p>
   {% if results is not empty %}
     {% for result in results %}
-      <p><a href="/book/{{ result.id }}"> {{ result.book }}</a></p>
+      <p><a href="/book/{{ result.id }}">{{ result.book }}</a></p>
         <li>Checkout Time: {{ result.checkout_date }}</li>
         <li>Due: {{ result.due_date }}</li>
+        <form action="/return" method="post">
+          <input type="hidden" name="user_id" value="{{ user.getId }}">
+          <input type="hidden" name="book_id" value="{{ result.id }}">
+          <button type="submit">Return</button>
+        </form>
         <br>
     {% endfor %}
     {% else %}
