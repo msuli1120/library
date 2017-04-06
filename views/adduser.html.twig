@@ -2,15 +2,26 @@
 
   <h4>Create User</h4>
 
-  <form action="/adduser" method="post">
-    <label for="user">Enter Name:</label>
-    <input type="text" name="user">
-    <button type="submit">Create</button>
-  </form>
+  <div class="row">
+    <div class="col-md-6">
+      <form action="/adduser" method="post">
+        <label for="user">Enter Name:</label>
+        <input type="text" name="user">
+        <button type="submit">Create</button>
+      </form>
 
-  {% if user is not empty %}
-    <p><a href="/user/{{ user.id }}">{{ user.user }}</a></p>
-  {% endif %}
+      {% if user is not empty %}
+        <p><a href="/user/{{ user.id }}">{{ user.user }}</a></p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      {% for alluser in allusers %}
+        <li><a href="/user/{{ alluser.getId }}">{{ alluser.getUser }}</a></li>
+      {% endfor %}
+    </div>
+  </div>
+
 
 
 {% include 'footer.html.twig' %}

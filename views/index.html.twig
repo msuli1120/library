@@ -6,4 +6,10 @@
   {% if msg is not empty %}
     <h5>{{ msg }}</h5>
   {% endif %}
+
+
+  <form action="/danger" method="post">
+    <h2><strong>Caution:</strong></h2><button type="submit" class="bg-danger">DELETE ALL EVERYTHING ALL</button>
+  </form>
+
 {% include 'footer.html.twig' %}

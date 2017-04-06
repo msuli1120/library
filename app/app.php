@@ -93,7 +93,7 @@
   });
 
   $app->get("/adduser", function () use ($app) {
-    return $app['twig']->render('adduser.html.twig', array('user'=>''));
+    return $app['twig']->render('adduser.html.twig', array('user'=>'', 'allusers'=>User::getAll()));
   });
 
  $app->post("/adduser", function () use ($app) {
@@ -102,7 +102,7 @@
      $new_user->save();
      return $app['twig']->render('user.html.twig', array('user'=>$new_user, 'books'=>Book::getAll()));
    } else {
-     return $app['twig']->render('adduser.html.twig', array('user'=>''));
+     return $app['twig']->render('adduser.html.twig', array('user'=>'', 'allusers'=>User::getAll()));
    }
  });
 
@@ -129,14 +129,14 @@
    if(!empty($_POST['srch-term'])){
      if(in_array($_POST['srch-term'], $user_names)){
        $new_user = User::SearchByUser($_POST['srch-term']);
-       return $app['twig']->render('adduser.html.twig', array('user'=>$new_user));
+       return $app['twig']->render('adduser.html.twig', array('user'=>$new_user, 'allusers'=>User::getAll()));
      } else {
        $user = '';
-       return $app['twig']->render('adduser.html.twig', array('user'=>$user));
+       return $app['twig']->render('adduser.html.twig', array('user'=>$user, 'allusers'=>User::getAll()));
      }
    } else {
      $user = '';
-     return $app['twig']->render('adduser.html.twig', array('user'=>$user));
+     return $app['twig']->render('adduser.html.twig', array('user'=>$user, 'allusers'=>User::getAll()));
    }
  });
 
@@ -175,6 +175,22 @@
    $user = User::find($_POST['user_id']);
    $results = $user->userInfo();
    return $app['twig']->render('userinfo.html.twig', array('user'=>$user, 'results'=>$results));
+ });
+
+ $app->post("/danger", function () use ($app) {
+   $executed = $GLOBALS['db']->exec("DELETE FROM authors;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM available_copies;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM books;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM books_authors;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM checkouts;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM copies;");
+   $executed = $GLOBALS['db']->exec("DELETE FROM users;");
+   return $app['twig']->render('index.html.twig', array('msg'=>''));
+ });
+
+ $app->get("/userpage/{id}", function ($id) use ($app) {
+   $new_user = User::find($id);
+   return $app['twig']->render('user.html.twig', array('user'=>$new_user, 'books'=>Book::getAll()));
  });
 
   return $app;
